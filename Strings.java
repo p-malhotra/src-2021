@@ -296,4 +296,155 @@ return m[s1.length()][s2.length()];
         return sub;
 
     }
+     /**
+     * leetcode 438. s: "cbaebabacd" p: "abc" Output: [0, 6]
+     * @param s
+     * @param p
+     * @return
+     */
+    public List<Integer> findAnagrams(String s, String p) {
+        if (s.length() < p.length()) return new ArrayList();
+        int[] pArr = new int[26];
+        int[] sArr = new int[26];
+        for (char c : p.toCharArray()) {
+            pArr[c - 'a']++;
+        }
+
+        List<Integer> list = new ArrayList();
+        for (int i = 0; i < s.length(); i++) {
+            sArr[s.charAt(i) - 'a']++;
+
+            if (i >= p.length()) {
+                sArr[s.charAt(i - p.length()) - 'a']--;
+            }
+            if (Arrays.equals(sArr, pArr))
+                list.add(i - p.length() + 1);
+        }
+        return list;
+
+    }
+
+    /**
+     * LEETCODE 76
+     *Minimum window  anagram, find min window which contains all the letters of t
+     */
+    public String minWindow(String s, String t) {
+        int min = Integer.MAX_VALUE;
+        int minStart = 0;
+        if (s.length() < t.length())
+            return "";
+        HashMap<Character, Integer> hm = new HashMap();
+        for (char c : t.toCharArray()) {
+            hm.put(c, hm.getOrDefault(c, 0) + 1);
+        }
+        int start = 0;
+        int end = 0;
+        int counter = 0;
+        while (end < s.length()) {
+            char c = s.charAt(end);
+            if (hm.containsKey(c)) {
+                hm.put(c, hm.getOrDefault(c, 0) - 1);
+                if (hm.get(c) == 0)
+                    counter++;
+            }
+            end++;
+            while (counter == t.length()) {////if the count is equal to the length of t, then we find such window
+                if (end - start < min) {
+                    min = end - start;
+                    minStart = start;
+                }
+                char st = s.charAt(start);
+                //starting from the leftmost index of the window, we want to check if s[left] is in t. If so, we will remove it from the window, and increase 1 time on its counter in hashmap which means we will expect the same character later by shifting right index. At the same time, we need to reduce the size of the window due to the removal.
+
+                if (hm.containsKey(st)) {
+                    hm.put(st, hm.get(st) + 1);
+                    if (hm.get(st) > 0)
+                        counter--;
+                }
+                start++;
+            }
+
+        }
+        if (min == Integer.MAX_VALUE)
+            return "";
+        return s.substring(minStart, minStart + min);
+
+    }
+    /**
+     * LEETCODE 76
+     *Minimum window  anagram, find min window which contains all the letters of t
+     * using array
+     */
+    public String minWindow1(String s, String t) {
+        int [] map = new int[128];
+        for (char c : t.toCharArray()) {
+            map[c]++;
+        }
+        int start = 0, end = 0, minStart = 0, minLen = Integer.MAX_VALUE, counter = t.length();
+        while (end < s.length()) {
+            final char c1 = s.charAt(end);
+            if (map[c1] > 0) counter--;
+            map[c1]--; // Decrease maps[s[end]]. If char does not exist in t, m[s[end]] will be negative.
+            end++;
+            while (counter == 0) {
+                if (minLen > end - start) {
+                    minLen = end - start;
+                    minStart = start;
+                }
+                final char c2 = s.charAt(start);
+                map[c2]++;
+                if (map[c2] > 0) counter++;
+                start++;
+            }
+        }
+
+        return minLen == Integer.MAX_VALUE ? "" : s.substring(minStart, minStart + minLen);
+    }
+    // at most k distinct chars
+    public int lengthOfLongestSubstringKDistinct(String s, int k) {
+        int[] map = new int[256];
+        int start = 0, end = 0, maxLen = Integer.MIN_VALUE, counter = 0;
+
+        while (end < s.length()) {
+            final char c1 = s.charAt(end);
+            if (map[c1] == 0) counter++;
+            map[c1]++;
+            end++;
+
+            while (counter > k) {
+                final char c2 = s.charAt(start);
+                if (map[c2] == 1) counter--;
+                map[c2]--;
+                start++;
+            }
+
+            maxLen = Math.max(maxLen, end - start);
+        }
+
+        return maxLen;
+    }
+   // Longest Substring - at most 2 distinct characters
+
+    public int lengthOfLongestSubstringTwoDistinctArr(String s) {
+        int[] map = new int[128];
+        int start = 0, end = 0, maxLen = 0, counter = 0;
+
+        while (end < s.length()) {
+            final char c1 = s.charAt(end);
+            if (map[c1] == 0) counter++;
+            map[c1]++;
+            end++;
+
+            while (counter > 2) {
+                final char c2 = s.charAt(start);
+                if (map[c2] == 1) counter--;
+                map[c2]--;
+                start++;
+            }
+
+            maxLen = Math.max(maxLen, end - start);
+        }
+
+        return maxLen;
+    }
 }
