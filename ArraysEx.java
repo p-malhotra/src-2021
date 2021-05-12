@@ -232,6 +232,29 @@ public class ArraysEx {
         }
 
     }
+      public List<Integer> arraysIntersection(int[] arr1, int[] arr2, int[] arr3) {
+        int i=0;int j=0; int k=0;
+        List<Integer> list = new ArrayList<>();
+        while(i<arr1.length && j<arr2.length &k<arr3.length){
+            int max =Math.max(Math.max(arr1[i],arr2[j]),arr3[k]);
+            if(arr1[i] == arr2[j]&& arr2[j]==arr3[k]) {
+                list.add(arr1[i]);
+                i++;j++;k++;
+
+            }
+            Integer[] a=   list.toArray(new Integer[0]);
+            while (i<arr1.length && arr1[i] <max)
+                i++;
+            while (j<arr2.length && arr2[j] <max)
+                j++;
+            while (k<arr3.length && arr3[k] <max)
+                k++;
+
+            //  i++;j++;k++;
+        }
+        return list;
+
+    }
     public static void main(String[] args){
         findLeastNumOfUniqueInts(new int[]{4,3,1,1,3,3,2},3);
     }
