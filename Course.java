@@ -123,5 +123,105 @@ else{
     static void printCourses(int[][] courses,int numcourse){
 
     }
+    /**
+     * leetcode find course order course schedule -II coursescheduleII
+     * 210 iterative BFS
+     */
+    static public int[] findOrder(int numCourses, int[][] prerequisites) {
+        if (numCourses == 0) return null;
+        // Convert graph presentation from edges to indegree of adjacent list.
+        int indegree[] = new int[numCourses], order[] = new int[numCourses], index = 0;
+        for (int i = 0; i < prerequisites.length; i++) // Indegree - how many prerequisites are needed.
+            indegree[prerequisites[i][0]]++;
+
+        Queue<Integer> queue = new LinkedList<Integer>();
+        for (int i = 0; i < numCourses; i++)
+            if (indegree[i] == 0) {
+                // Add the course to the order because it has no prerequisites.
+                order[index++] = i;
+                queue.offer(i);
+            }
+        // How many courses don't need prerequisites.
+        while (!queue.isEmpty()) {
+            int prerequisite = queue.poll(); // Already finished this prerequisite course.
+            for (int i = 0; i < prerequisites.length; i++) {
+                if (prerequisites[i][1] == prerequisite) {
+                    indegree[prerequisites[i][0]]--;
+                    if (indegree[prerequisites[i][0]] == 0) {
+                        // If indegree is zero, then add the course to the order.
+                        order[index++] = prerequisites[i][0];
+                        queue.offer(prerequisites[i][0]);
+                    }
+                }
+            }
+        }
+        return (index == numCourses) ? order : new int[0];
+    }
+     /**
+     * trying to find order and no of semesters
+     */
+    public int[] findOrderAndSemesters(int numCourses, int[][] prerequisites) {
+        if (numCourses == 0) return null;
+        int[] inDegree = new int[numCourses];
+        int[] order = new int[numCourses];
+        for (int[] pre : prerequisites) {
+            ++inDegree[pre[0]];
+        }
+
+        int semester = 0;
+        Queue<Integer> q = new LinkedList();
+        int index = 0;
+        for (int i = 0; i < numCourses; i++)
+            if (inDegree[i] == 0) {
+                q.offer(i);
+                order[index++] = i;
+            }
+        while (!q.isEmpty()) {
+            int preCourse = q.poll();
+            for (int i = 0; i < prerequisites.length; i++) {
+                if (prerequisites[i][1] == preCourse) {
+                    --inDegree[prerequisites[i][0]];
+                    if (inDegree[prerequisites[i][0]] == 0) {
+                        q.offer(prerequisites[i][0]);
+                        order[index++] = prerequisites[i][0];
+                    }
+                }
+            }
+            ++semester;
+        }
+        System.out.println("Semesters" + semester);//return se
+
+        return index == numCourses ? order : new int[0];
+    }
+     public String midSemCourse(String[][] preReq){
+        HashMap<String, String> hm =new HashMap<>(); // key is course, value is prereq
+        for(int i=0;i<preReq.length;i++){
+            hm.put(preReq[i][1],preReq[i][0]);
+        }
+        List<String> preReqList= new ArrayList<String>(hm.values());
+        String firstC="";
+        Queue<String> q= new java.util.LinkedList();
+        for(String pre:preReqList){
+            if(!hm.containsKey(pre)){
+                q.offer(pre);
+                System.out.println(pre);
+
+            }
+        }
+        int courseNo=1; // no of courses is arr.size*2;
+        while(!q.isEmpty()  && courseNo <preReq.length){
+            String pre=q.poll();
+
+        for(Map.Entry<String,String> entry: hm.entrySet()){
+                if(entry.getValue().equals(pre)){
+                    q.offer(entry.getKey());
+                    courseNo++;
+                    if(courseNo>=preReq.length)
+                        return entry.getValue();
+                }
+            }}
+        return null;
+
+    }
 
 }
