@@ -90,6 +90,92 @@ public class Strings {
         }
         return d;
     }
+    //    LongestSubstring - without repeating characters Input: s = "abcabcbb"
+    //Output: 3
+
+    public int lengthOfLongestSubstringArr(String s) {
+        int[] map = new int[128];
+        int start = 0, end = 0, maxLen = 0, counter = 0;
+
+        while (end < s.length()) {
+            final char c1 = s.charAt(end);
+            if (map[c1] > 0) counter++;
+            map[c1]++;
+            end++;
+
+            while (counter > 0) {
+                final char c2 = s.charAt(start);
+                if (map[c2] > 1) counter--;
+                map[c2]--;
+                start++;
+            }
+
+            maxLen = Math.max(maxLen, end - start);
+        }
+
+        return maxLen;
+    }
+    /** leetcode
+     * 727. Minimum Window Subsequence
+     * @param S = "abcdebdde", T = "bde"
+     * Output: "bcde"
+     * @param T
+     * @return
+     */
+    public String minWindowSubSequence(String S, String T) {
+        if(S.length()< T.length())
+            return "";
+        String ans="";
+        int j=0; int end=0;
+        for(int i=0;i<S.length();i++)
+            if(S.charAt(i)==T.charAt(j)){
+                j++;
+                if(j>=T.length()){
+                    System.out.print("i "+i+"-j- "+j);
+                    end=i;
+                    j--;
+                    while(j>=0){
+                        if(S.charAt(i)==T.charAt(j))
+                            j--;
+                        i--;
+                    }
+                    i++;
+                    String s=S.substring(i,end+1);
+                    if(ans.length()==0 || ans.length()> s.length())
+                        ans=s;
+                    j=0;
+                }
+            }
+        return ans;
+    }
+
+    public static String longestSubstringWithoutDuplication(String s) {
+        int[] map = new int[128];
+        int start = 0, end = 0, maxLen = 0, counter = 0; int i=0;
+
+        while (end < s.length()) {
+            final char c1 = s.charAt(end);
+            if (map[c1] > 0) counter++;
+            map[c1]++;
+            end++;
+
+            while (counter > 0) {
+                final char c2 = s.charAt(start);
+                if (map[c2] > 1) counter--;
+                map[c2]--;
+                start++;
+            }
+
+            // maxLen = Math.max(maxLen, end - start);
+            if(maxLen <(end-start)){
+                maxLen=end-start;
+                i=start;
+
+            }
+        }
+
+        return s.substring(i,i+maxLen);
+    }
     public int compress(char[] chars) {
         int indexAns = 0, index = 0;
         while(index < chars.length){
