@@ -118,4 +118,182 @@ public class Strings {
         if(sb.append(A).toString().contains(B)) return ++count;
         return -1;
     }
+     /**
+     * LeetCode 97
+     * Interleaving str
+     */
+    static boolean interleaving(String s1,String s2,String s3){
+        return interleaving( s1,0, s2,0, s3, "");
+
+    }
+    static boolean interleaving(String s1,int l1,String s2,int l2,String s3,String res){
+         if((res.equals(s3) && l1==s1.length() && l2==s2.length()))
+            return true;
+        boolean ans=false;
+        boolean temp;
+        if(l1<s1.length()){
+             ans =ans | interleaving(s1,l1+1,s2,l2,s3,res+s1.charAt(l1));
+        }
+
+         if(l2<s2.length()){
+            ans =ans | interleaving(s1,l1,s2,l2+1,s3,res+s2.charAt(l2));
+
+         }
+        return ans;
+    }
+    static boolean interleavingDP(String s1,String s2,String s3){
+        if(s1.length()+s2.length() != s3.length())
+            return false;
+        boolean[][] m= new boolean[s1.length()+1][s2.length()+1];
+        for(int i=0;i<s1.length()+1;i++)
+            for(int j=0;j<s2.length()+1;j++){
+                if(i==0 && j==0)
+                    m[i][j]=true;
+                else if(i==0){
+                    if((s2.charAt(j-1)==s3.charAt(i+j-1)))
+                m[i][j] =(s2.charAt(j-1)==s3.charAt(i+j-1) && m[i][j-1]);
+                }
+                 else if(j==0) {
+                    if (s1.charAt(i - 1) == s3.charAt(i + j - 1))
+                        m[i][j] = m[i - 1][j];
+                }
+                 else {
+                         boolean i1 = (s1.charAt(i - 1) == s3.charAt(i + j - 1));
+                         boolean i2 = m[i - 1][j];
+                         boolean j1 = (s2.charAt(j - 1) == s3.charAt(i + j - 1));
+                         boolean j2 = m[i][j - 1];
+                         m[i][j] = (i1 && i2) || (j1 && j2);
+                     }                }
+
+        return m[s1.length()][s2.length()];
+    }
+
+    /**
+     * leetcoe 1143
+     * abcdeh,abddfsdfh --> adh
+     * @return
+     */
+    static int lengthlongestCommonSubSeqRe(String s1, String s2){
+        return lengthlongestCommonSubSeqRe(s1,0,0,s2);
+    }
+    static int lengthlongestCommonSubSeqRe(String s1,int i,int j,String s2){
+        if(i==s1.length() || j==s2.length())
+            return 0;
+        if(s1.charAt(i)==s2.charAt(j))
+            return lengthlongestCommonSubSeqRe(s1,i+1,j+1,s2)+1;
+           return Math.max(lengthlongestCommonSubSeqRe(s1,i+1,j,s2) ,
+                    lengthlongestCommonSubSeqRe(s1,i,j+1,s2)) ;
+    }
+
+    /**
+     * length and subsequence
+     * @param s1
+     * @param s2
+     * @return
+     */
+    static int lengthlongestCommonSubSeqDP(String s1,String s2){
+        int[][]m= new int[s1.length()+1][s2.length()+1];
+        for(int i=0;i<=s1.length();i++)
+            for(int j=0;j<=s2.length();j++){
+                if(i==0 ||j ==0)
+                    m[i][j]=0;
+                else{
+                    if(s1.charAt(i-1) != s2.charAt(j-1))
+                        m[i][j] = Math.max(m[i-1][j],m[i][j-1]);
+                    else
+                        m[i][j]= 1+m[i-1][j-1];
+                }
+            }
+        // Find subsequence
+        int temp=m[s1.length()][s2.length()];
+            String s="";
+            int i=s1.length();
+            int j=s2.length();
+            while(i>0 && j>0){
+                if(s1.charAt(i-1)==s2.charAt(j-1)){
+                    s=s1.charAt(i-1)+s;
+                    i--;j--;}
+                else if(m[i-1][j]>m[i][j-1]){
+                    i--;
+                }else
+                    j--;
+            }
+        System.out.println("Print Sub seq "+s);
+return m[s1.length()][s2.length()];
+    }
+    static void longestCommonSubSeqRe(String s1, String s2){
+        String r="";
+        System.out.println("Rec-->"+longestCommonSubSeqRe(s1,0,0,s2));
+    }
+    static String longestCommonSubSeqRe(String s1,int i,int j,String s2){
+        if(i==s1.length() || j==s2.length())
+            return "";
+        if(s1.charAt(i)==s2.charAt(j))
+            return s1.charAt(i)+longestCommonSubSeqRe(s1,i+1,j+1,s2);
+
+        if(((longestCommonSubSeqRe(s1,i+1,j,s2)).length())>
+                ((longestCommonSubSeqRe(s1,i,j+1,s2)).length()))
+            return longestCommonSubSeqRe(s1,i+1,j,s2);
+        else
+            return longestCommonSubSeqRe(s1,i,j+1,s2);
+    }
+
+
+    static int longestincSubSequence(int[] arr){
+        int[] res=new int[arr.length+1];
+        res[0]=1;
+        for(int i=1;i<arr.length;i++){
+            for(int j=0;j<=i;j++){
+                if(arr[i]>arr[j] && (res[i]<res[j]+1)) {
+                    res[i] =res[j] + 1;
+                }
+                }
+            }
+        int max=0;
+        int index=0;
+        for(int e=0;e<res.length;e++){
+            if(max<res[e]){
+                max=res[e];
+            index=e;
+            }
+        }
+        int mx=max;
+        String s=arr[index]+"**";
+        while(index>=0 && mx >0){
+            if(res[index]==mx-1) {
+                s = s + arr[index];
+                mx=mx-1;
+            }
+            index=index-1;
+
+        }
+        System.out.println("-->"+s);
+            return max;
+    }
+
+    static  String longestCommonsibString(String s1, String s2){
+        int m[][] = new int [s1.length()+1][s2.length()+1];
+        String sub="";
+        int index=-1;
+        int max=Integer.MIN_VALUE;
+        for(int i=0;i<=s1.length();i++)
+            for(int j=0;j<=s2.length();j++){
+                if(i==0 ||j==0)
+                    m[i][j]=0;
+                else if((s1.charAt(i-1)==s2.charAt(j-1))) {
+                    m[i][j] = 1 + m[i - 1][j - 1];
+                    if(m[i][j]>max) {
+                        max = m[i][j];
+                        index=i;
+
+                    }
+                }
+            }
+        sub= s1.substring(index-max,index);
+        System.out.println("Length of substring "+max);
+        System.out.println("Index "+(index));
+
+        return sub;
+
+    }
 }
