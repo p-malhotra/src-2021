@@ -365,4 +365,45 @@ public class TreeNode {
         }
         return closest;
     }
+      public int kthSmallest(TreeNode root, int k) { // BST itself could be altered
+        Stack<TreeNode> st = new Stack<>();
+
+        while (root != null) {
+            st.push(root);
+            root = root.left;
+        }
+
+        while (k != 0) {
+            TreeNode n = st.pop();
+            k--;
+            if (k == 0) return n.val;
+            TreeNode right = n.right;
+            while (right != null) {
+                st.push(right);
+                right = right.left;
+            }
+        }
+
+        return -1; // never hit if k is valid
+    }
+      public int findKthLargestValueInBst(TreeNode tree, int k) {
+        Stack<TreeNode> st = new Stack<>();
+
+        while (tree != null) {
+            st.push(tree);
+            tree = tree.right;
+        }
+
+        while (k != 0) {
+            TreeNode n = st.pop();
+            k--;
+            if (k == 0) return n.val;
+            TreeNode le = n.left;
+            while (le != null) {
+                st.push(le);
+                le = le.right;
+            }
+        }
+        return -1;
+    }
 }
