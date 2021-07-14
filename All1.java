@@ -122,7 +122,7 @@ public class All1 {
             for (int i = 0; i < nums.length; i++) {
                 sum += nums[i];
                 count += hm.getOrDefault(sum - k, 0);
-                hm.put(sum - k, hm.getOrDefault(sum - k, 0) + 1);
+                hm.put(sum , hm.getOrDefault(sum , 0) + 1);
             }
             return count;
         }
