@@ -38,37 +38,7 @@ public class Course {
         return true;
         
     }
-    static boolean courseComplete(int numOFCourses, int[][] pre){
-        HashSet<Integer> visited = new HashSet<>();
-        //Hash map is created to find which course is dependent om key course
-        HashMap<Integer, List<Integer>> hm = new HashMap<>();
-        int[] visit = new int[numOFCourses];
-        for(int[] i:pre){
-            if(hm.containsKey(i[1]))
-               hm.get(i[1]).add(i[0]);
-else{
-    hm.put(i[1],new ArrayList<>(Arrays.asList(i[0])));
-            }
-        }
-        for(int i=0;i<numOFCourses;i++){
-            if(!dfs(visit,i,hm))
-                return false;
-        }
-        return true;
-    }
-    static boolean dfs(int[] visited, int src,HashMap<Integer, List<Integer>> hm){
-        if(visited[src]==-1)
-            return false;
-        if(visited[src]==1)
-        return true;
-        visited[src] =-1;
-        if(hm.containsKey(src))
-            for(int j:hm.get(src))
-                return dfs(visited,j,hm);
-
-         visited[src]=1;
-         return true;
-    }
+    
      static boolean bfs(int num ,int[][] prerequisites) {
          //counter for no of prerequisite. ie how many pre req for a course
          int[] counter = new int[num];
