@@ -8,6 +8,36 @@ public class Course {
      * can all courses be completed
      * [0,1] means 0 is dependent on 1 ir 1 should be completed before 0
      */
+    public boolean canFinish(int numCourses, int[][] prerequisites) {
+        int[] inDegree = new int[numCourses];
+        HashMap<Integer,List<Integer>> hm = new HashMap<>();
+        boolean[] visit = new boolean[numCourses];
+        for(int[] pre: prerequisites){
+            List<Integer> list= hm.getOrDefault(pre[1], new ArrayList<Integer>());
+            list.add(pre[0]);
+            hm.put(pre[1],list);           
+        }
+        for(int i=0;i<inDegree.length; i++){
+            if(! canDo(hm,visit,i))
+                return false;
+        }
+        return true;
+    }
+    
+    static boolean canDo(HashMap<Integer,List<Integer>> hm,boolean[] visit,int course){
+        if(visit[course])
+            return false;
+        visit[course]=true;
+        if(hm.containsKey(course)){
+            for(int i : hm.get(course)){
+                if(! canDo(hm,visit,i))
+                    return false;
+            }
+        }
+        visit[course]=false;
+        return true;
+        
+    }
     static boolean courseComplete(int numOFCourses, int[][] pre){
         HashSet<Integer> visited = new HashSet<>();
         //Hash map is created to find which course is dependent om key course
